@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Testing Adventure</title>
+</head>
+
+<body>
+    <noscript>This page contains webassembly and javascript content, please enable javascript in your
+        browser.</noscript>
+    <h2 id="title">LOADING...</h2>
+    <pre id="text"></pre>
+    <div id="inputs"></div>
+    <script type="module">
+        import init, { start } from "./node_modules/aleph-naught/aleph_naught.js";
+
+        const FILES = [
+            "/examples/demon.rune",
+        ];
+
+        async function run() {
+            await init();
+
+            let value = await start({
+                // Have Aleph load the source code for you.
+                files: FILES,
+                // for inline code:
+                // sources: [{name: "blah", code: "pub fn do_thing() {}"}]
+                title_element: document.getElementById("title"),
+                text_element: document.getElementById("text"),
+                input_element: document.getElementById("inputs"),
+            });
+
+            if (typeof (value) === "string") {
+                console.error("Wasm error: ", value);
+            } else {
+                console.log("Wasm value: ", value);
+            }
+        }
+
+        run();
+    </script>
+</body>
+
+</html>

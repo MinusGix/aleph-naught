@@ -1,0 +1,347 @@
+use Engine::Button;
+
+enum SkinTone {
+    Light,
+    Fair,
+    Olive,
+    Tan,
+    Brown,
+    DarkBrown,
+    Ebony,
+
+    LightBlue,
+    /// As in, literally golden-ish
+    LightGold,
+
+    DarkBlue,
+}
+impl SkinTone {
+    /// (self) -> String, non-capitalized
+    fn name(self) {
+        match self {
+            SkinTone::Light => "light",
+            SkinTone::Fair => "fair",
+            SkinTone::Olive => "olive",
+            SkinTone::Tan => "tan",
+            SkinTone::Brown => "brown",
+            SkinTone::DarkBrown => "dark-brown",
+            SkinTone::Ebony => "ebony",
+            SkinTone::LightBlue => "light-blue",
+            SkinTone::LightGold => "light-gold",
+            SkinTone::DarkBlue => "dark-blue",
+        }
+    }
+}
+
+// Add more as needed
+enum Sex {
+    Male,
+    Female,
+    NA,
+}
+impl Sex {
+    /// (self) -> String
+    fn name(self) {
+        match self {
+            Sex::Male => "male",
+            Sex::Female => "female",
+            Sex::NA => "NA",
+        }
+    }
+}
+
+enum Height {
+    /// 6ft (human), 5,5ft (HalfElf), 5,9(Sylph)
+    Tall,
+    /// 5,6 ft (human), 4,11ft (HalfElf), 4,6ft(Sylph)
+    Average,
+    /// no clue
+    Short,
+}
+impl Height {
+    /// (self) -> String
+    fn name(self) {
+        match self {
+            Height::Tall => "tall",
+            Height::Average => "average",
+            Height::Short => "short",
+        }
+    }
+}
+
+enum HairColor {
+    Black,
+    Blonde,
+    DirtyBlonde,
+    Brown,
+    White,
+    Gray,
+    Silver,
+    Auburn,
+    Ginger,
+}
+impl HairColor {
+    fn name(self) {
+        match self {
+            HairColor::Black => "black",
+            HairColor::Blonde => "blonde",
+            HairColor::DirtyBlonde => "dirty-blonde",
+            HairColor::Brown => "brown",
+            HairColor::White => "white",
+            HairColor::Gray => "gray",
+            HairColor::Silver => "silver",
+            HairColor::Auburn => "auburn",
+            HairColor::Ginger => "ginger",
+        }
+    }
+}
+
+
+enum Race {
+    Human,
+    HalfElf,
+    Sylph,
+}
+impl Race {
+    /// (self) -> String
+    fn name(self) {
+        match self {
+            Race::Human => "Human",
+            Race::HalfElf => "Half-Elf",
+            Race::Sylph => "Sylph",
+        }
+    }
+
+
+    fn society_description(self) {
+        match self {
+            Race::Human => "A common people in Aurian. They live around eighty years. Average ability in magic, but tends to be more physically stronger than other civilized races.",
+            Race::HalfElf => "Due to mass immigration more than a decade ago, Half-Elves have a reputation for thievery, and of being poor workers. They live around one-hundred-fifty years. They have a natural affinity in magic.",
+            Race::Sylph => "Water elementals, one of the few types which achieved sentience through the mass-use of water in civilization. They live around forty years of age before rejoining with the river. Physically weak, but high affinity with water magics. Unable to use fire magics. They have a hard time reading non-Sylph body language.",
+        }
+    }
+
+    fn appearance_description(self) {
+        match self {
+            Race::Human => "A human's appearence can vary wildly. While the people of Aurian tend towards a more tanned skin on average, it ranges from the very pale to the darkest colors. Their heights also vary, but often end up in the range of 4,5ft to 6ft.",
+            Race::HalfElf => "A Half-Elf's appearance is influenced by the place of their Elven parent's birth. Now, except for a few exception cases, the interbreeding of Half-Elves has led to a nearly homogenous general appearence. Unnaturally pale skin, pointed ears, and either blond or red hair. Their height tends to range from 4,3ft to 5,5ft, being much shorter than their human counterparts. The main differing aspect is the Half-Elves' eye color, which is the only part of them still affected by the location of their birth.",
+            Race::Sylph => "Sylphs are challenging to tell the differences between for the more common humanoid races. They are usually made of water which holds a blue tint even when underground, with pieces of river rock littered throughout their body to provide protection. Their 'heads' are generally the only part of them that is completely clear of any debris. Despite appearances, they do bleed fluid which is relatively close to salt-water. Their height ranges from 4ft to 5,9ft"
+        }
+    }
+
+    fn default_skin_tone(self) {
+        match self {
+            // Most common in this continent
+            Race::Human => SkinTone::Tan,
+            // Most common world-wide
+            Race::HalfElf => SkinTone::Light,
+            Race::Sylph => SkinTone::LightBlue,
+        }
+    }
+
+    /// (self) -> Vec<SkinTone>, at least one element
+    fn natural_skin_tones(self) {
+        match self {
+            Race::Human => [SkinTone::Light, SkinTone::Fair, SkinTone::Olive, SkinTone::Tan, SkinTone::Brown, SkinTone::DarkBrown, SkinTone::Ebony],
+            Race::HalfElf => [SkinTone::Light, SkinTone::LightBlue, SkinTone::LightGold],
+            Race::Sylph => [SkinTone::LightBlue, SkinTone::DarkBlue],
+        }
+    }
+
+    fn default_hair_color(self) {
+        match self {
+            Race::Human => HairColor::Black,
+            Race::HalfElf => HairColor::Blonde,
+        }
+    }
+
+    /// (self) -> Vec<HairColor>, may be empty
+    /// The hair color can become more than the natural, but this is what is by default in existence
+    fn natural_hair_colors(self) {
+        match self {
+            Race::Human => [HairColor::Black, HairColor::Blonde, HairColor::DirtyBlonde, HairColor::Brown, HairColor::Gray, HairColor::Auburn, HairColor::Ginger],
+            Race::HalfElf => [HairColor::Blonde, HairColor::Auburn, HairColor::Ginger, HairColor::Silver],
+            Race::Sylph => [],
+        }
+    }
+
+    /// (self) -> Vec<Sex>
+    fn natural_sexes(self) {
+        match self {
+            Race::Human => [Sex::Male, Sex::Female],
+            Race::HalfElf => [Sex::Male, Sex::Female],
+            Race::Sylph => [Sex::NA],
+        }
+    }
+}
+
+struct Player {
+    /// String
+    name,
+    /// Race
+    race,
+    /// Sex
+    sex,
+    /// Height
+    height,
+    /// SkinTone
+    skin_tone,
+    /// HairColor
+    hair_color,
+}
+impl Player {
+    /// () -> Player
+    fn new() {
+        Player {
+            name: "Aster",
+            race: Race::Human,
+            height: Height::Average,
+            sex: Sex::Female,
+            // Default for humans in this land.
+            skin_tone: SkinTone::Tan,
+            hair_color: HairColor::Black,
+        }
+    }
+}
+
+fn idcb (func) {
+    return func();
+}
+fn accept_buttons(state, accept_callback, deny_callback) {
+    state.ask_choice([
+        Button::new("Accept", accept_callback),
+        Button::new("Deny", deny_callback),
+    ], |func| {
+        func();
+    });
+}
+
+
+pub fn entry(state) {
+    state.add_scenes([
+        // Character creation
+        ("character_creation", character_creation),
+        ("character_creation_appearance", character_creation_appearance),
+        ("character_creation_name", character_creation_name),
+        ("character_creation_done", character_creation_done),
+        // Aurum
+        ("aurum_town", aurum_town),
+        ("aurum_tavern", aurum_tavern),
+    ]);
+
+    state.set_title("Aleph: Game Engine");
+    state.set_text("Please choose an option that is not exiting the game.");
+    state.ask_choice([
+        Button::new("New Game", || new_game(state)),
+        Button::new("Load Game", || load_game(state))
+    ], idcb);
+}
+fn new_game(state) {
+    state.overwrite_info(#{
+        player: Player::new(),
+    });
+    state.goto("character_creation");
+}
+fn load_game(state, scenes) {
+    state.set_text("Loading is not implemented yet.");
+    // TODO: reset engine function
+}
+fn character_creation(state) {
+    state.set_title("Character Creation: Race");
+    state.set_text("Choose a race. Selecting one will show you information about it before finalization.");
+    let race_choice = |race| {
+        state.set_title(`Character Creation: Race(${race.name()})`);
+        state.set_text(`Race: ${race.name()}\nSociety: ${race.society_description()}\nAppearance: ${race.appearance_description()}`);
+
+        accept_buttons(state, || {
+            state.info.player.race = race;
+            state.info.player.skin_tone = race.default_skin_tone();
+            state.info.player.hair_color = race.default_hair_color();
+            state.goto("character_creation_appearance");
+        }, || state.goto("character_creation"));
+    };
+    state.ask_choice([
+        Button::new("Human", Race::Human),
+        Button::new("Half-Elf", Race::HalfElf),
+        Button::new("Sylph", Race::Sylph)
+    ], |race| {
+        race_choice(race);
+    });
+}
+fn character_creation_appearance(state) {
+    state.set_title("Character Creation: Appearance");
+    state.clear_text();
+    match state.info.player.race {
+        Race::Human => character_creation_appearance_human(state),
+        Race::HalfElf => character_creation_appearance_half_elf(state),
+        Race::Sylph => character_creation_appearance_sylph(state),
+    }
+}
+fn ask_skin_tone(state, race, callback) {
+    let skin_tones = race.natural_skin_tones()
+        .map(|tone| Button::new(tone.name().capitalize(), tone));
+    state.ask_choice(skin_tones, callback);
+}
+fn ask_hair_color(state, race, callback) {
+    let hair_colors = race.natural_hair_colors()
+        .map(|color| Button::new(color.name().capitalize(), color));
+    state.ask_choice(hair_colors, callback);
+}
+fn character_creation_appearance_human(state) {
+    state.set_text("Please choose a skin tone for your character.");
+    ask_skin_tone(state, state.info.player.race, |skin_tone| {
+        state.info.player.skin_tone = skin_tone;
+        state.set_text("Please hoose a hair color for your character.");
+        ask_hair_color(state, state.info.player.race, |hair_color| {
+            state.info.player.hair_color = hair_color;
+            state.goto("character_creation_name");
+        });
+    });
+}
+fn character_creation_appearance_half_elf(state) {
+    state.set_text("Please choose a skin tone for your character.");
+    ask_skin_tone(state, state.info.player.race, |skin_tone| {
+        state.info.player.skin_tone = skin_tone;
+        state.set_text("Please hoose a hair color for your character.");
+        ask_hair_color(state, state.info.player.race, |hair_color| {
+            state.info.player.hair_color = hair_color;
+            state.goto("character_creation_name");
+        });
+    });
+}
+fn character_creation_appearance_sylph(state) {
+    state.set_text("Please choose a skin tone for your character.");
+    ask_skin_tone(state, state.info.player.race, |skin_tone| {
+        state.info.player.skin_tone = skin_tone;
+        // Sylphs don't have hair so we don't ask what their hair color is
+        state.goto("character_creation_name");
+    });
+}
+fn character_creation_name(state) {
+    state.set_title("Character Creation: Name");
+    state.set_text("There is nothing here as there is no text input yet.");
+    state.ask_input("", |name| name != "", |name| {
+        state.info.player.name = name;
+        state.goto("character_creation_done");
+    });
+}
+fn character_creation_done(state) {
+    state.set_title("Character Creation: Finished");
+    state.set_text(`Are you finished creating your character?\nName: ${state.info.player.name}\nRace: ${state.info.player.race.name().capitalize()}`);
+    accept_buttons(state, || state.goto("aurum_town"), || state.goto("character_creation_name"));
+}
+fn aurum_town(state) {
+    state.set_title("Aurum: Town Center");
+    state.set_text("You stand in the very center of the town in a plaza. To your right is a short line of commercial buildings, a blacksmith, tavern, and even a guild-house even if it is broken down.");
+    state.ask_choice([
+        Button::new("Tavern", "aurum_tavern"),
+    ], |next| state.goto(next));
+}
+fn aurum_tavern(state) {
+    state.set_title("Aurum: The Wet Iron Tavern");
+    state.set_text("You are in the Wet Iron Tavern, a place of.. completely normal repute. For workers tired after working in the mines this is a prime relaxation spot, complete with alcoholic beverages and a complete lacking of mining equipment.");
+
+    state.ask_choice([
+        Button::new("Back to Town", "aurum_town"),
+    ], |next| state.goto(next));
+}

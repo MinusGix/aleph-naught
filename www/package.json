@@ -1,0 +1,22 @@
+{
+  "name": "aleph-webpage",
+  "version": "0.1.0",
+  "description": "Webpage for Aleph",
+  "main": "index.js",
+  "scripts": {
+    "start": "http -p 8080"
+  },
+  "keywords": [
+    "webassembly",
+    "wasm",
+    "rust"
+  ],
+  "author": "MinusGix",
+  "license": "(MIT OR Apache-2.0)",
+  "devDependencies": {
+    "hello-wasm-pack": "^0.1.0"
+  },
+  "dependencies": {
+    "aleph-naught": "file:../pkg"
+  }
+}

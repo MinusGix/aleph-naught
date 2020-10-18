@@ -1,0 +1,61 @@
+// We import it because it is much nicer to do Button::new instead of Engine::Button::new
+use Engine::Button;
+
+// The entrypoint. This is the function that is first called by the engine and given the state.
+pub fn entry(state) {
+    // We have to register all the available scenes, because that lets us save where we are.
+    // A nice feature of Rune is that it provides a warning if a function is unused, which makes
+    // it harder to forget to register them.
+    state.add_scenes([
+        // A Scene does not have to have the same name as its function.
+        ("town", town),
+        ("forest", forest),
+        ("tavern", tavern),
+        ("demon_conv", demon_conv),
+    ]);
+    // Store some state information at startup.
+    state.info.shoe_quest = false;
+
+    // Enter the scene named town.
+    state.goto("town");
+}
+fn town(state) {
+    state.set_title("Town of Plenty");
+    state.set_text("You stand in the middle of the town as people bustle around you in their daily life. At the far end of the town lies the gate, and from there adventure. Nearer is the tavern, where stories of valor and poor luck can be heard throughout the day.");
+
+    // Displays the buttons with the text.
+    // The callback given to the button is passed to the callback
+    // given to `ask_choice`.
+    state.ask_choice([
+        Button::new("Leave Town", "forest"),
+        Button::new("Enter Tavern", "tavern"),
+    ], |choice| state.goto(choice));
+}
+fn forest(state) {
+    state.set_title("Forest of Darkness");
+    state.set_text("In the forest of darkness it is quite dark, but unlike your expectations it is also quite loud. Birds chirp, fallen leaves crunch as animals pass by, and the occasional spontaneous explosion.");
+    let choices = [
+        Button::new("Flee to Town", || state.goto("town")),
+        Button::new("Stay", || state.set_text("You died to a spontaneous explosion.")),
+    ];
+    if state.info.shoe_quest {
+        choices.push(Button::new("Search for Shoes", || state.set_text("You died to a carnivorous shoe, and an explosion")));
+    }
+    state.ask_choice(choices, |func| func());
+}
+fn tavern(state) {
+    state.set_title("Cheap Tavern");
+    state.set_text("The room smells of cheap alcohol, vomit, and an excessive amount of cleaning magicks. In the corner there is a hooded man, but the clothing barely covers the obvious appearance of a demon of the ninth circle.");
+    // Doesn't check if you've already talked with the demon.
+    state.ask_choice([
+        Button::new("Talk to the Demon", "demon_conv"),
+        Button::new("Leave Tavern", "town"),
+    ], |next| state.goto(next));
+}
+fn demon_conv(state) {
+    state.set_text("You sit down to speak to the demon, and have a surprisingly amiable conversation. He gives you a quest to go to the forest and look for his lost pair of shoes.");
+    state.info.shoe_quest = true;
+    state.ask_choice([
+        Button::new("Continue", "tavern"),
+    ], |next| state.goto(next));
+}
